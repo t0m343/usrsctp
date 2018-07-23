@@ -46,6 +46,7 @@ include(CheckCCompilerFlag)
 #################################################
 # CHECK OPTIONS
 #################################################
+add_definitions(-DCMAKE_USRSCTP_BUILD)
 
 option(sctp_invariants "Add runtime checks" 0)
 if (sctp_invariants)
@@ -55,16 +56,19 @@ endif ()
 option(sctp_debug "Provide debug information" 1)
 if (sctp_debug)
 	add_definitions(-DSCTP_DEBUG)
+	set(SCTP_DEBUG TRUE)
 endif ()
 
 option(sctp_inet "Support IPv4" 1)
 if (sctp_inet)
 	add_definitions(-DINET)
+	set(INET TRUE)
 endif ()
 
 option(sctp_inet6 "Support IPv6" 1)
 if (sctp_inet6)
 	add_definitions(-DINET6)
+	set(INET6 TRUE)
 endif ()
 
 option(sctp_werror "Treat warning as error" 1)
@@ -107,7 +111,7 @@ if (have_linux_rtnetlink_h)
 	add_definitions(-DHAVE_LINUX_RTNETLINK_H)
 endif ()
 
-check_include_files("sys/types.h;netinet/in.h;netinet/ip.h;netinet/ip_icmp.h" have_netinet_ip_icmp_h)
+check_include_files("sys/types.h;netinLet/in.h;netinet/ip.h;netinet/ip_icmp.h" have_netinet_ip_icmp_h)
 if (have_netinet_ip_icmp_h)
 	add_definitions(-DHAVE_NETINET_IP_ICMP_H)
 endif ()
@@ -124,35 +128,40 @@ endif ()
 
 set(CMAKE_REQUIRED_INCLUDES "${CMAKE_SOURCE_DIR}/usrsctplib")
 
-check_include_file(usrsctp.h have_usrsctp_h)
-if (NOT have_usrsctp_h)
-	message(FATAL_ERROR "usrsctp.h not found")
-endif ()
+#check_include_file(usrsctp.h.in have_usrsctp_h_in)
+#if (NOT have_usrsctp_h_in)
+#	message(FATAL_ERROR "usrsctp.h.in not found")
+#endif ()
 
 check_struct_has_member("struct sockaddr" "sa_len" "sys/types.h;sys/socket.h" have_sa_len)
 if (have_sa_len)
 	message(STATUS "have_sa_len")
 	add_definitions(-DHAVE_SA_LEN)
+	set(HAVE_SA_LEN TRUE)
 endif ()
 
 check_struct_has_member("struct sockaddr_in" "sin_len" "sys/types.h;netinet/in.h" have_sin_len)
 if (have_sin_len)
 	message(STATUS "have_sin_len")
 	add_definitions(-DHAVE_SIN_LEN)
+	set(HAVE_SIN_LEN TRUE)	
 endif ()
 
 check_struct_has_member("struct sockaddr_in6" "sin6_len" "sys/types.h;netinet/in.h" have_sin6_len)
 if (have_sin6_len)
 	message(STATUS "have_sin6_len")
 	add_definitions(-DHAVE_SIN6_LEN)
+	option(HAVE_SIN6_LEN TRUE )
 endif ()
 
-check_struct_has_member("struct sockaddr_conn" "sconn_len" "usrsctp.h" have_sconn_len)
+check_struct_has_member("struct sockaddr_conn" "sconn_len" "usrsctp.h.in" have_sconn_len)
 if (have_sconn_len)
 	message(STATUS "HAVE_SCONN_LEN")
 	add_definitions(-DHAVE_SCONN_LEN)
+	set(HAVE_SCONN_LEN TRUE)
 endif ()
 
+configure_file(${CMAKE_SOURCE_DIR}/usrsctplib/usrsctp.h.in ${CMAKE_SOURCE_DIR}/usrsctplib/usrsctp.h)
 
 #################################################
 # COMPILER SETTINGS

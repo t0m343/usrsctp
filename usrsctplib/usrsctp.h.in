@@ -31,6 +31,19 @@
 #ifndef __USRSCTP_H__
 #define __USRSCTP_H__
 
+// Structure defines in the HeaderFile.
+// This Provides safety when linking 
+#ifndef CMAKE_USRSCTP_BUILD
+#cmakedefine INET
+#cmakedefine INET6
+#cmakedefine SCTP_DEBUG
+#cmakedefine HAVE_SA_LEN
+#cmakedefine HAVE_SIN_LEN
+#cmakedefine HAVE_SIN6_LEN
+#cmakedefine HAVE_SCONN_LEN
+#endif
+
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
