@@ -36,6 +36,7 @@
 
 set(VERSION "1.0.0")
 
+
 set(prefix 					${CMAKE_INSTALL_PREFIX})
 set(exec_prefix 			${prefix})
 set(libdir 					${exec_prefix}/lib)
@@ -44,16 +45,24 @@ set(CMAKE_REQUIRED_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MACOSX_RPATH 		1)
 
 add_definitions(-D__Userspace__)
-add_definitions(-D__Userspace_os_${CMAKE_SYSTEM_NAME})
+#Android is Like Linux but not Linux
+if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
+	add_definitions(-D__Userspace_os_Linux)
+else()
+	add_definitions(-D__Userspace_os_${CMAKE_SYSTEM_NAME})
+endif()
+
 add_definitions(-DSCTP_SIMPLE_ALLOCATOR)
 add_definitions(-DSCTP_PROCESS_LEVEL_LOCKS)
+
+
 
 
 #################################################
 # OS DEPENDENT
 #################################################
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Android")
 	add_definitions(-D_GNU_SOURCE)
 endif ()
 
@@ -104,6 +113,9 @@ list(APPEND usrsctp_root_headers
 	user_uma.h
 	usrsctp.h
 )
+if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
+	list(APPEND usrsctp_root_headers ifaddrs.h)
+endif()
 
 list(APPEND usrsctp_netinet_headers
 	netinet/sctp_asconf.h
@@ -168,8 +180,14 @@ list(APPEND usrsctp_sources
 	user_socket.c
 )
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
+	list(APPEND usrsctp_sources ifaddrs.c)
+endif()
+
 add_library(usrsctp SHARED ${usrsctp_sources} ${usrsctp_headers})
-add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Android")
+	add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
+endif()
 
 if (WIN32)
 	message(STATUS "link library: ws2_32")
@@ -177,7 +195,9 @@ if (WIN32)
 	target_link_libraries(usrsctp-static ws2_32)
 endif ()
 
-set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Android")
+	set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
+endif()
 set_target_properties(usrsctp PROPERTIES IMPORT_SUFFIX "_import.lib")
 set_target_properties(usrsctp PROPERTIES SOVERSION 1 VERSION 1.0.0)
 
@@ -190,5 +210,5 @@ endif ()
 # INSTALL LIBRARY AND HEADER
 #################################################
 
-install(TARGETS usrsctp usrsctp-static DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS usrsctp DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES usrsctp.h DESTINATION include)
