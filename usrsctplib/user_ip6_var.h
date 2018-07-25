@@ -88,7 +88,7 @@ struct ip6_hdr {
 #define s6_addr16 u.Word
 #endif
 #if !defined(__Userspace_os_Windows)
-#if !defined(__Userspace_os_Linux)
+#if !defined(__Userspace_os_Android) && !defined(__Userspace_os_Linux)
 #define s6_addr8  __u6_addr.__u6_addr8
 #define s6_addr16 __u6_addr.__u6_addr16
 #define s6_addr32 __u6_addr.__u6_addr32

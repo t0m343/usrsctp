@@ -45,12 +45,7 @@ set(CMAKE_REQUIRED_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MACOSX_RPATH 		1)
 
 add_definitions(-D__Userspace__)
-#Android is Like Linux but not Linux
-if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
-	add_definitions(-D__Userspace_os_Linux)
-else()
-	add_definitions(-D__Userspace_os_${CMAKE_SYSTEM_NAME})
-endif()
+add_definitions(-D__Userspace_os_${CMAKE_SYSTEM_NAME})
 
 add_definitions(-DSCTP_SIMPLE_ALLOCATOR)
 add_definitions(-DSCTP_PROCESS_LEVEL_LOCKS)
@@ -114,7 +109,7 @@ list(APPEND usrsctp_root_headers
 	usrsctp.h
 )
 if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
-	list(APPEND usrsctp_root_headers ifaddrs.h)
+	list(APPEND usrsctp_root_headers android/ifaddrs.h)
 endif()
 
 list(APPEND usrsctp_netinet_headers
@@ -181,7 +176,7 @@ list(APPEND usrsctp_sources
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
-	list(APPEND usrsctp_sources ifaddrs.c)
+	list(APPEND usrsctp_sources android/ifaddrs.c)
 endif()
 
 add_library(usrsctp SHARED ${usrsctp_sources} ${usrsctp_headers})

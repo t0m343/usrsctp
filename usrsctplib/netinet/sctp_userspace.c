@@ -38,7 +38,7 @@
 #include <pthread_np.h>
 #endif
 
-#if defined(__Userspace_os_Linux)
+#if defined(__Userspace_os_Android) || defined(__Userspace_os_Linux)
 #include <sys/prctl.h>
 #endif
 
@@ -75,7 +75,7 @@ sctp_userspace_set_threadname(const char *name)
 #if defined(__Userspace_os_Darwin)
 	pthread_setname_np(name);
 #endif
-#if defined(__Userspace_os_Linux)
+#if defined(__Userspace_os_Android) || defined(__Userspace_os_Linux)
 	prctl(PR_SET_NAME, name);
 #endif
 #if defined(__Userspace_os_FreeBSD)

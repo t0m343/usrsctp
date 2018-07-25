@@ -6239,7 +6239,7 @@ sctp_input(i_pak, va_alist)
 #if defined(__Windows__)
 	NTOHS(ip->ip_len);
 #endif
-#if defined(__Userspace_os_Linux) || defined(__Userspace_os_Windows)
+#if defined(__Userspace_os_Linux) || defined(__Userspace_os_Android) || defined(__Userspace_os_Windows)
 	ip->ip_len = ntohs(ip->ip_len);
 #endif
 #if defined(__FreeBSD__)
@@ -6251,7 +6251,7 @@ sctp_input(i_pak, va_alist)
 #elif defined(__APPLE__)
 	length = ip->ip_len + iphlen;
 #elif defined(__Userspace__)
-#if defined(__Userspace_os_Linux) || defined(__Userspace_os_Windows)
+#if defined(__Userspace_os_Linux) || defined(__Userspace_os_Android) || defined(__Userspace_os_Windows)
 	length = ip->ip_len;
 #else
 	length = ip->ip_len + iphlen;

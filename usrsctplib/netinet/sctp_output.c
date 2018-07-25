@@ -56,7 +56,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/sctp_output.c 335179 2018-06-14 21:30:52Z t
 #include <netinet/sctp_bsd_addr.h>
 #include <netinet/sctp_input.h>
 #include <netinet/sctp_crc32.h>
-#if defined(__Userspace_os_Linux)
+#if defined(__Userspace_os_Android) || defined(__Userspace_os_Linux)
 #define __FAVOR_BSD    /* (on Ubuntu at least) enables UDP header field names like BSD in RFC 768 */
 #endif
 #if defined(INET) || defined(INET6)

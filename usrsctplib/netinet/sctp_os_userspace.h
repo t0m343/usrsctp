@@ -276,7 +276,7 @@ typedef char* caddr_t;
 
 #else /* !defined(Userspace_os_Windows) */
 #include <sys/socket.h>
-#if defined(__Userspace_os_DragonFly) || defined(__Userspace_os_FreeBSD) || defined(__Userspace_os_Linux) || defined(__Userspace_os_NetBSD) || defined(__Userspace_os_OpenBSD) || defined(__Userspace_os_NaCl) || defined(__Userspace_os_Fuchsia)
+#if defined(__Userspace_os_DragonFly) || defined(__Userspace_os_FreeBSD) || defined(__Userspace_os_Android) || defined(__Userspace_os_Linux) || defined(__Userspace_os_NetBSD) || defined(__Userspace_os_OpenBSD) || defined(__Userspace_os_NaCl) || defined(__Userspace_os_Fuchsia)
 #include <pthread.h>
 #endif
 typedef pthread_mutex_t userland_mutex_t;
@@ -498,7 +498,11 @@ struct sx {int dummy;};
 #include <sys/types.h>
 #if !defined(__Userspace_os_Windows)
 #if defined(INET) || defined(INET6)
+#if defined(__Userspace_os_Android)
+#include <android/ifaddrs.h>
+#else
 #include <ifaddrs.h>
+#endif
 #endif
 
 /* for ioctl */
@@ -533,7 +537,7 @@ struct sx {int dummy;};
 #if !defined(__Userspace_os_Windows)
 #include <netinet/ip6.h>
 #endif
-#if defined(__Userspace_os_Darwin) || defined(__Userspace_os_FreeBSD) || defined(__Userspace_os_Linux) || defined(__Userspace_os_NetBSD) || defined(__Userspace_os_OpenBSD) || defined(__Userspace_os_Windows)
+#if defined(__Userspace_os_Darwin) || defined(__Userspace_os_FreeBSD) || defined(__Userspace_os_Android) || defined(__Userspace_os_Linux) || defined(__Userspace_os_NetBSD) || defined(__Userspace_os_OpenBSD) || defined(__Userspace_os_Windows)
 #include "user_ip6_var.h"
 #else
 #include <netinet6/ip6_var.h>
@@ -1131,7 +1135,7 @@ sctp_get_mbuf_for_msg(unsigned int space_needed, int want_header, int how, int a
 	} while (0)
 #endif
 
-#if defined(__Userspace_os_Linux)
+#if defined(__Userspace_os_Android) || defined(__Userspace_os_Linux)
 #if !defined(TAILQ_FOREACH_SAFE)
 #define TAILQ_FOREACH_SAFE(var, head, field, tvar)             \
          for ((var) = ((head)->tqh_first);                     \
