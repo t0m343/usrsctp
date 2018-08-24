@@ -36,7 +36,6 @@
 
 set(VERSION "1.0.0")
 
-
 set(prefix 					${CMAKE_INSTALL_PREFIX})
 set(exec_prefix 			${prefix})
 set(libdir 					${exec_prefix}/lib)
@@ -180,9 +179,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
 endif()
 
 add_library(usrsctp SHARED ${usrsctp_sources} ${usrsctp_headers})
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Android")
-	add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
-endif()
+add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
 
 if (WIN32)
 	message(STATUS "link library: ws2_32")
@@ -190,9 +187,7 @@ if (WIN32)
 	target_link_libraries(usrsctp-static ws2_32)
 endif ()
 
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Android")
-	set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
-endif()
+set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
 set_target_properties(usrsctp PROPERTIES IMPORT_SUFFIX "_import.lib")
 set_target_properties(usrsctp PROPERTIES SOVERSION 1 VERSION 1.0.0)
 

@@ -48,12 +48,19 @@ include(CheckCCompilerFlag)
 #################################################
 add_definitions(-DCMAKE_USRSCTP_BUILD)
 
+option(sctp_useronly_install "set a local install path" 1)
+if(sctp_useronly_install)
+	IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+		set(CMAKE_INSTALL_PREFIX "$ENV{LOCAL_CMAKE_INSTALL}/${CMAKE_SYSTEM_NAME}" CACHE PATH "For Android to find" FORCE)
+	ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+endif()
+
 option(sctp_invariants "Add runtime checks" 0)
 if (sctp_invariants)
 	add_definitions(-DINVARIANTS)
 endif ()
 
-option(sctp_debug "Provide debug information" 1)
+option(sctp_debug "Provide debug information" 0)
 if (sctp_debug)
 	add_definitions(-DSCTP_DEBUG)
 	set(SCTP_DEBUG TRUE)
@@ -75,7 +82,7 @@ option(sctp_werror "Treat warning as error" 1)
 
 option(sctp_link_programs_static "Link example programs static" 0)
 
-option(sctp_build_programs "Build example programs" 1)
+option(sctp_build_programs "Build example programs" 0)
 
 option(sctp_sanitizer_address "Compile with address sanitizer" 0)
 
