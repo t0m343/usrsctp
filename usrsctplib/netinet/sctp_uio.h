@@ -1210,10 +1210,10 @@ struct xsctp_inpcb {
 	uint16_t qlen;
 	uint16_t maxqlen;
 #endif
-#if defined(__Windows__)
-	uint16_t padding;
-#endif
-#if !(defined(__FreeBSD__) && (__FreeBSD_version < 1001517))
+	uint16_t __spare16;
+#if defined(__FreeBSD__)
+	kvaddr_t socket;
+#else
 	void *socket;
 #endif
 #if defined(__FreeBSD__) && __FreeBSD_version > 1100096
@@ -1225,19 +1225,7 @@ struct xsctp_inpcb {
 #elif defined(__FreeBSD__) && (__FreeBSD_version < 1001517)
 	uint32_t extra_padding[31]; /* future */
 #else
-#if defined(__LP64__)
-#if defined(__FreeBSD__) && __FreeBSD_version > 1100096
-	uint32_t extra_padding[27]; /* future */
-#else
-	uint32_t extra_padding[29]; /* future */
-#endif
-#else
-#if defined(__FreeBSD__) && __FreeBSD_version > 1100096
-	uint32_t extra_padding[28]; /* future */
-#else
-	uint32_t extra_padding[30]; /* future */
-#endif
-#endif
+	uint32_t extra_padding[26]; /* future */
 #endif
 };
 

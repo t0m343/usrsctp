@@ -1154,6 +1154,9 @@ usrsctp_recvv(struct socket *so,
 			errno = 0;
 		}
 	}
+	if (errno != 0) {
+		goto out;
+	}
 	if ((*msg_flags & MSG_NOTIFICATION) == 0) {
 		struct sctp_inpcb *inp;
 
@@ -1205,7 +1208,10 @@ usrsctp_recvv(struct socket *so,
 			*infolen = 0;
 		}
 	}
-	if ((fromlenp != NULL) && (fromlen > 0) && (from != NULL)) {
+	if ((fromlenp != NULL) &&
+	    (fromlen > 0) &&
+	    (from != NULL) &&
+	    (ulen > auio.uio_resid)) {
 		switch (from->sa_family) {
 #if defined(INET)
 		case AF_INET:
@@ -1228,6 +1234,7 @@ usrsctp_recvv(struct socket *so,
 			*fromlenp = fromlen;
 		}
 	}
+out:
 	if (errno == 0) {
 		/* ready return value */
 		return (ulen - auio.uio_resid);
@@ -3488,6 +3495,49 @@ usrsctp_conninput(void *addr, const void *buffer, size_t length, uint8_t ecn_bit
 	return;
 }
 
+int
+usrsctp_get_events(struct socket *so)
+{
+	int events = 0;
+
+	if (so == NULL) {
+		errno = EBADF;
+		return -1;
+	}
+
+	SOCK_LOCK(so);
+	if (soreadable(so)) {
+		events |= SCTP_EVENT_READ;
+	}
+	if (sowriteable(so)) {
+		events |= SCTP_EVENT_WRITE;
+	}
+	if (so->so_error) {
+		events |= SCTP_EVENT_ERROR;
+	}
+	SOCK_UNLOCK(so);
+
+	return events;
+}
+
+int
+usrsctp_set_upcall(struct socket *so, void (*upcall)(struct socket *, void *, int), void *arg)
+{
+	if (so == NULL) {
+		errno = EBADF;
+		return (-1);
+	}
+
+	SOCK_LOCK(so);
+	so->so_upcall = upcall;
+	so->so_upcallarg = arg;
+	so->so_snd.sb_flags |= SB_UPCALL;
+	so->so_rcv.sb_flags |= SB_UPCALL;
+	SOCK_UNLOCK(so);
+
+	return (0);
+}
+
 #define USRSCTP_TUNABLE_SET_DEF(__field, __prefix)   \
 int usrsctp_tunable_set_ ## __field(uint32_t value)  \
 {                                                    \
@@ -3518,7 +3568,7 @@ int usrsctp_sysctl_set_ ## __field(uint32_t value)   \
 	}                                            \
 }
 
-#if !defined(__Userspace_os_Windows)
+#if __GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtype-limits"
 #endif
@@ -3591,8 +3641,8 @@ USRSCTP_SYSCTL_SET_DEF(sctp_initial_cwnd, SCTPCTL_INITIAL_CWND)
 #ifdef SCTP_DEBUG
 USRSCTP_SYSCTL_SET_DEF(sctp_debug_on, SCTPCTL_DEBUG)
 #endif
-#if !defined(__Userspace_os_Windows)
-#pragma GCC diagnostic push
+#if __GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6) || defined(__clang__)
+#pragma GCC diagnostic pop
 #endif
 
 #define USRSCTP_SYSCTL_GET_DEF(__field) \
