@@ -133,7 +133,7 @@ endif ()
 # CHECK STRUCT MEMBERS
 #################################################
 
-set(CMAKE_REQUIRED_INCLUDES "${CMAKE_SOURCE_DIR}/usrsctplib")
+set(CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/usrsctplib")
 
 #check_include_file(usrsctp.h.in have_usrsctp_h_in)
 #if (NOT have_usrsctp_h_in)
@@ -168,7 +168,7 @@ if (have_sconn_len)
 	set(HAVE_SCONN_LEN TRUE)
 endif ()
 
-configure_file(${CMAKE_SOURCE_DIR}/usrsctplib/usrsctp.h.in ${CMAKE_SOURCE_DIR}/usrsctplib/usrsctp.h)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usrsctplib/usrsctp.h.in ${CMAKE_CURRENT_LIST_DIR}/usrsctplib/usrsctp.h)
 
 #################################################
 # COMPILER SETTINGS
