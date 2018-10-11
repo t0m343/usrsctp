@@ -75,3 +75,8 @@ callgrind.out*
 
 # cmake build
 /build
+
+# cmake generated Header
+
+usrsctplib/usrsctp.h
+
