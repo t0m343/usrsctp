@@ -190,6 +190,7 @@ endif ()
 target_include_directories(usrsctp-static INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(usrsctp INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   					     $<INSTALL_INTERFACE:include>)
+set_target_properties(usrsctp PROPERTIES PUBLIC_HEADER "usrsctp.h")
 
 set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
 set_target_properties(usrsctp PROPERTIES IMPORT_SUFFIX "_import.lib")
@@ -206,7 +207,7 @@ endif ()
 
 install(TARGETS usrsctp EXPORT usrsctpTargets
 	LIBRARY DESTINATION lib
-	INCLUDES DESTINATION include)
+	PUBLIC_HEADER DESTINATION include)
 install(EXPORT usrsctpTargets
 	FILE usrsctpTargets.cmake
 	DESTINATION lib/cmake/usrsctp)
