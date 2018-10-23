@@ -187,6 +187,7 @@ if (WIN32)
 	target_link_libraries(usrsctp-static ws2_32)
 endif ()
 
+target_include_directories(usrsctp-static INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
 set_target_properties(usrsctp PROPERTIES IMPORT_SUFFIX "_import.lib")
 set_target_properties(usrsctp PROPERTIES SOVERSION 1 VERSION 1.0.0)
