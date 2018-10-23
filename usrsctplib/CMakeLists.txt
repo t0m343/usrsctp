@@ -188,6 +188,9 @@ if (WIN32)
 endif ()
 
 target_include_directories(usrsctp-static INTERFACE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(usrsctp INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  					     $<INSTALL_INTERFACE:include>)
+
 set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
 set_target_properties(usrsctp PROPERTIES IMPORT_SUFFIX "_import.lib")
 set_target_properties(usrsctp PROPERTIES SOVERSION 1 VERSION 1.0.0)
@@ -201,5 +204,10 @@ endif ()
 # INSTALL LIBRARY AND HEADER
 #################################################
 
-install(TARGETS usrsctp DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES usrsctp.h DESTINATION include)
+install(TARGETS usrsctp EXPORT usrsctpTargets
+	LIBRARY DESTINATION lib
+	INCLUDES DESTINATION include)
+install(EXPORT usrsctpTargets
+	FILE usrsctpTargets.cmake
+	DESTINATION lib/cmake/usrsctp)
+#install(FILES usrsctp.h DESTINATION include)
