@@ -210,4 +210,13 @@ install(TARGETS usrsctp EXPORT usrsctpTargets
 install(EXPORT usrsctpTargets
 	FILE usrsctpTargets.cmake
 	DESTINATION lib/cmake/usrsctp)
-#install(FILES usrsctp.h DESTINATION include)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("usrsctpConfigVersion.cmake"
+	VERSION ${VERSION}
+	COMPATIBILITY SameMajorVersion
+	)
+install(FILES "usrsctpConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/usrsctpConfigVersion.cmake"
+	DESTINATION lib/cmake/usrsctp
+	)
+
