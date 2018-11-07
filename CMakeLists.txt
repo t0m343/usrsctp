@@ -168,7 +168,7 @@ if (have_sconn_len)
 	set(HAVE_SCONN_LEN TRUE)
 endif ()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usrsctplib/usrsctp.h.in ${CMAKE_CURRENT_LIST_DIR}/usrsctplib/usrsctp.h)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usrsctplib/usrsctp.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/usrsctp.h)
 
 #################################################
 # COMPILER SETTINGS
