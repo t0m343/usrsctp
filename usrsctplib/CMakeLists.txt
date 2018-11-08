@@ -188,10 +188,10 @@ if (WIN32)
 endif ()
 
 target_include_directories(usrsctp-static PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include/>
         $<INSTALL_INTERFACE:include>)
 target_include_directories(usrsctp PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include/>
         $<INSTALL_INTERFACE:include>)
 set_target_properties(usrsctp PROPERTIES PUBLIC_HEADER "usrsctp.h")
 
