@@ -175,6 +175,9 @@ if (WIN32)
 	message(STATUS "link library: ws2_32")
 	target_link_libraries(usrsctp ws2_32)
 	target_link_libraries(usrsctp-static ws2_32)
+	## set usrsctp static lib to export all symbols
+	set_target_properties(usrsctp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif ()
 
 set_target_properties(usrsctp-static PROPERTIES OUTPUT_NAME "usrsctp")
