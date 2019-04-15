@@ -43,10 +43,10 @@ set(includedir 				${prefix}/include/usrsctp)
 set(CMAKE_REQUIRED_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MACOSX_RPATH 		1)
 
-add_definitions(-D__Userspace__)
-add_definitions(-D__Userspace_os_${CMAKE_SYSTEM_NAME})
-add_definitions(-DSCTP_SIMPLE_ALLOCATOR)
-add_definitions(-DSCTP_PROCESS_LEVEL_LOCKS)
+list(APPEND USRSCTP_PRIVATE_DEFINITIONS -D__Userspace__)
+list(APPEND USRSCTP_PRIVATE_DEFINITIONS -D__Userspace_os_${CMAKE_SYSTEM_NAME})
+list(APPEND USRSCTP_PRIVATE_DEFINITIONS -DSCTP_SIMPLE_ALLOCATOR)
+list(APPEND USRSCTP_PRIVATE_DEFINITIONS -DSCTP_PROCESS_LEVEL_LOCKS)
 
 
 #################################################
@@ -54,32 +54,32 @@ add_definitions(-DSCTP_PROCESS_LEVEL_LOCKS)
 #################################################
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-	add_definitions(-D_GNU_SOURCE)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -D_GNU_SOURCE)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-	add_definitions(-U__FreeBSD__)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -U__FreeBSD__)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}     -Wno-address-of-packed-member")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-address-of-packed-member")
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-	add_definitions(-U__APPLE__)
-	add_definitions(-D__APPLE_USE_RFC_2292)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -U__APPLE__)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -D__APPLE_USE_RFC_2292)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}     -Wno-address-of-packed-member -Wno-deprecated-declarations")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-address-of-packed-member -Wno-deprecated-declarations")
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "DragonFly")
-	add_definitions(-U__DragonFly__)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -U__DragonFly__)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "NetBSD")
-	add_definitions(-U__NetBSD__)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -U__NetBSD__)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
-	add_definitions(-U__OpenBSD__)
+	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -U__OpenBSD__)
 endif ()
 
 
@@ -170,7 +170,8 @@ list(APPEND usrsctp_sources
 
 add_library(usrsctp SHARED ${usrsctp_sources} ${usrsctp_headers})
 add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
-
+target_compile_definitions(usrsctp PUBLIC ${USRSCTP_PRIVATE_DEFINITIONS})
+target_compile_definitions(usrsctp-static PUBLIC ${USRSCTP_PRIVATE_DEFINITIONS})
 if (WIN32)
 	message(STATUS "link library: ws2_32")
 	target_link_libraries(usrsctp ws2_32)
