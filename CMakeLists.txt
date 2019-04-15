@@ -54,7 +54,7 @@ endif ()
 
 option(sctp_debug "Provide debug information" 1)
 if (sctp_debug)
-	list(APPEND USRSCTP_PRIVATE_DEFINITIONS -DSCTP_DEBUG)
+	list(APPEND USRSCTP_PUBLIC_DEFINITIONS -DSCTP_DEBUG)
 endif ()
 
 option(sctp_inet "Support IPv4" 1)
@@ -160,76 +160,76 @@ endif ()
 
 # SETTINGS FOR UNIX COMPILER
 if (CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "AppleClang" OR CMAKE_C_COMPILER_ID MATCHES "GNU")
-	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -std=c99 -pedantic -Wall -Wextra")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c99 -pedantic -Wall -Wextra")
+	list(APPEND USRSCTP_C_FLAGS -std=c99 -pedantic -Wall -Wextra)
+	list(APPEND USRSCTP_CXX_FLAGS -std=c99 -pedantic -Wall -Wextra)
 
 	check_c_compiler_flag(-Wfloat-equal has_wfloat_equal)
 	if (has_wfloat_equal)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wfloat-equal")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfloat-equal")
+		list(APPEND USRSCTP_C_FLAGS -Wfloat-equal)
+		list(APPEND USRSCTP_CXX_FLAGS -Wfloat-equal)
 	endif ()
 
 	check_c_compiler_flag(-Wshadow has_wshadow)
 	if (has_wshadow)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wshadow")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
+		list(APPEND USRSCTP_C_FLAGS -Wshadow)
+		list(APPEND USRSCTP_CXX_FLAGS -Wshadow)
 	endif ()
 
 	check_c_compiler_flag(-Wpointer-arith has_wpointer_aritih)
 	if (has_wpointer_aritih)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wpointer-arith")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpointer-arith")
+		list(APPEND USRSCTP_C_FLAGS -Wpointer-arith)
+		list(APPEND USRSCTP_CXX_FLAGS -Wpointer-arith)
 	endif ()
 
 	check_c_compiler_flag(-Wunreachable-code has_wunreachable_code)
 	if (has_wunreachable_code)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wunreachable-code")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunreachable-code")
+		list(APPEND USRSCTP_C_FLAGS -Wunreachable-code)
+		list(APPEND USRSCTP_CXX_FLAGS -Wunreachable-code)
 	endif ()
 
 	check_c_compiler_flag(-Winit-self has_winit_self)
 	if (has_winit_self)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Winit-self")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winit-self")
+		list(APPEND USRSCTP_C_FLAGS -Winit-self)
+		list(APPEND USRSCTP_CXX_FLAGS -Winit-self)
 	endif ()
 
 	check_c_compiler_flag(-Wno-unused-function has_wno_unused_function)
 	if (has_wno_unused_function)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wno-unused-function")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")
+		list(APPEND USRSCTP_C_FLAGS -Wno-unused-function)
+		list(APPEND USRSCTP_CXX_FLAGS -Wno-unused-function)
 	endif ()
 
 	check_c_compiler_flag(-Wno-unused-parameter has_wno_unused_parameter)
 	if (has_wno_unused_parameter)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wno-unused-parameter")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
+		list(APPEND USRSCTP_C_FLAGS -Wno-unused-parameter)
+		list(APPEND USRSCTP_CXX_FLAGS -Wno-unused-parameter)
 	endif ()
 
 	check_c_compiler_flag(-Wno-unreachable-code has_wno_unreachable_code)
 	if (has_wno_unreachable_code)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wno-unreachable-code")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unreachable-code")
+		list(APPEND USRSCTP_C_FLAGS -Wno-unreachable-code)
+		list(APPEND USRSCTP_CXX_FLAGS -Wno-unreachable-code)
 	endif ()
 
 	check_c_compiler_flag(-Wstrict-prototypes has_wstrict_prototypes)
 	if (has_wstrict_prototypes)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wstrict-prototypes")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-prototypes")
+		list(APPEND USRSCTP_C_FLAGS -Wstrict-prototypes)
+		list(APPEND USRSCTP_CXX_FLAGS -Wstrict-prototypes)
 	endif ()
 
 	if (sctp_werror)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Werror")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+		list(APPEND USRSCTP_C_FLAGS -Werror)
+		list(APPEND USRSCTP_CXX_FLAGS -Werror)
 	endif ()
 
 	if (sctp_sanitizer_address)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fsanitize=address -fno-omit-frame-pointer -g")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+		list(APPEND USRSCTP_C_FLAGS -fsanitize=address -fno-omit-frame-pointer -g)
+		list(APPEND USRSCTP_CXX_FLAGS -fsanitize=address -fno-omit-frame-pointer -g)
 	endif ()
 
 	if (sctp_sanitizer_memory)
-		set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fsanitize=memory -fno-omit-frame-pointer -g -fsanitize-memory-track-origins")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=memory -fno-omit-frame-pointer -g -fsanitize-memory-track-origins")
+		list(APPEND USRSCTP_C_FLAGS -fsanitize=memory -fno-omit-frame-pointer -g -fsanitize-memory-track-origins)
+		list(APPEND USRSCTP_CXX_FLAGS -fsanitize=memory -fno-omit-frame-pointer -g -fsanitize-memory-track-origins)
 	endif ()
 endif ()
 
@@ -238,28 +238,28 @@ if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
 	if (CMAKE_C_FLAGS MATCHES "/W[0-4]")
 		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 	else ()
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
+		list(APPEND USRSCTP_C_FLAGS /W4)
 	endif ()
 
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4100") # 'identifier' : unreferenced formal parameter
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4127") # conditional expression is constant
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4200") # nonstandard extension used : zero-sized array in struct/union
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4214") # bit field types other than int
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4706") # assignment within conditional expression
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4245") # 'conversion' : conversion from 'type1' to 'type2', signed/unsigned mismatch
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4389") # 'operator' : signed/unsigned mismatch
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4702") # unreachable code
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4701") # Potentially uninitialized local variable 'name' used
+	list(APPEND USRSCTP_C_FLAGS /wd4100) # 'identifier' : unreferenced formal parameter
+	list(APPEND USRSCTP_C_FLAGS /wd4127) # conditional expression is constant
+	list(APPEND USRSCTP_C_FLAGS /wd4200) # nonstandard extension used : zero-sized array in struct/union
+	list(APPEND USRSCTP_C_FLAGS /wd4214) # bit field types other than int
+	list(APPEND USRSCTP_C_FLAGS /wd4706) # assignment within conditional expression
+	list(APPEND USRSCTP_C_FLAGS /wd4245) # 'conversion' : conversion from 'type1' to 'type2', signed/unsigned mismatch
+	list(APPEND USRSCTP_C_FLAGS /wd4389) # 'operator' : signed/unsigned mismatch
+	list(APPEND USRSCTP_C_FLAGS /wd4702) # unreachable code
+	list(APPEND USRSCTP_C_FLAGS /wd4701) # Potentially uninitialized local variable 'name' used
 
 	# ToDo
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244") # 'conversion' conversion from 'type1' to 'type2', possible loss of data
+	list(APPEND USRSCTP_C_FLAGS /wd4244) # 'conversion' conversion from 'type1' to 'type2', possible loss of data
 
 	if (sctp_werror)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")
+		list(APPEND USRSCTP_C_FLAGS /WX)
 	endif ()
 endif ()
 
-message(STATUS "Compiler flags (CMAKE_C_FLAGS): ${CMAKE_C_FLAGS}")
+message(STATUS "Compiler flags (USRSCTP_C_FLAGS): ${USRSCTP_C_FLAGS}")
 
 
 #################################################
