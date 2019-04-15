@@ -34,7 +34,7 @@
 # INCLUDE MODULES AND SETTINGS
 #################################################
 
-set(VERSION "1.0.0")
+set(VERSION 1.0.0)
 
 set(prefix 					${CMAKE_INSTALL_PREFIX})
 set(exec_prefix 			${prefix})
@@ -202,6 +202,25 @@ endif ()
 #################################################
 # INSTALL LIBRARY AND HEADER
 #################################################
+target_include_directories(usrsctp PUBLIC $<INSTALL_INTERFACE:include>)
+target_include_directories(usrsctp-static PUBLIC $<INSTALL_INTERFACE:include>)
 
-install(TARGETS usrsctp usrsctp-static DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS usrsctp usrsctp-static EXPORT usrsctp-export
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin)
 install(FILES usrsctp.h DESTINATION include)
+
+install(EXPORT usrsctp-export
+	FILE usrsctpTargets.cmake
+	NAMESPACE usrsctp::
+	DESTINATION lib/cmake/usrsctp)
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file("usrsctpConfigVersion.cmake"
+	VERSION ${VERSION}
+	COMPATIBILITY SameMajorVersion)
+
+install(FILES "${CMAKE_CURRENT_LIST_DIR}/usrsctpConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/usrsctpConfigVersion.cmake"
+	DESTINATION lib/cmake/usrsctp)
