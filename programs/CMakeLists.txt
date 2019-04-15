@@ -61,7 +61,6 @@ endif ()
 # MISC
 #################################################
 
-find_package(Threads)
 
 
 #################################################
@@ -99,10 +98,10 @@ foreach (source_file ${check_programs})
 		${source_file_we}
 		${source_file}
 	)
-
+	target_compile_definitions(${source_file_we} PRIVATE ${USRSCTP_PRIVATE_DEFINITIONS})
+	target_compile_options(${source_file_we} PRIVATE ${USRSCTP_C_FLAGS})
 	target_link_libraries(
 		${source_file_we}
 		${programs_link_library}
-		${CMAKE_THREAD_LIBS_INIT}
 	)
 endforeach ()

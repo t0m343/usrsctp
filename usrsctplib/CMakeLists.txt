@@ -170,12 +170,20 @@ list(APPEND usrsctp_sources
 
 add_library(usrsctp SHARED ${usrsctp_sources} ${usrsctp_headers})
 add_library(usrsctp-static STATIC ${usrsctp_sources} ${usrsctp_headers})
+#Privat Definitions
 target_compile_definitions(usrsctp PRIVATE ${USRSCTP_PRIVATE_DEFINITIONS})
 target_compile_definitions(usrsctp-static PRIVATE ${USRSCTP_PRIVATE_DEFINITIONS})
+#Public Definitions
 target_compile_definitions(usrsctp PUBLIC ${USRSCTP_PUBLIC_DEFINITIONS})
 target_compile_definitions(usrsctp-static PUBLIC ${USRSCTP_PUBLIC_DEFINITIONS})
+#Flags (applied for c and cpp compiler)
 target_compile_options(usrsctp PRIVATE ${USRSCTP_C_FLAGS})
 target_compile_options(usrsctp-static PRIVATE ${USRSCTP_C_FLAGS})
+
+find_package(Threads REQUIRED)
+target_link_libraries(usrsctp PUBLIC Threads::Threads)
+target_link_libraries(usrsctp-static PUBLIC Threads::Threads)
+
 if (WIN32)
 	message(STATUS "link library: ws2_32")
 	target_link_libraries(usrsctp ws2_32)
